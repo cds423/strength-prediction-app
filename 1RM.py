@@ -18,7 +18,7 @@ with st.sidebar:
     high_val = st.number_input("優秀強度起始值 (N)", value=2800)
     
     st.divider()
-    st.header("🎓 學術資訊")
+    st.header("研究單位與開發團隊")
     st.markdown("**開發者：** 張文彥 & 王重凱")
     st.markdown("**指導教授：** 何承訓 博士")
     st.markdown("**研究機構：**")
@@ -56,12 +56,12 @@ with col_input:
 with col_result:
     if predict_btn:
         # 迴歸公式計算
-        pred_sq = max(0.0, -16.379 + (0.038 * imtp_value) + (8.524 * smi_calc))
+        pred_sq = max(0.0, -62.803 + (0.024 * imtp_value) + (14.047 * smi_calc))
         pred_bp = max(0.0, -59.761 + (0.014 * imtp_value) + (9.358 * smi_calc))
-        pred_dl = max(0.0, -62.803 + (0.024 * imtp_value) + (14.047 * smi_calc))
+        pred_dl = max(0.0, -16.379 + (0.038 * imtp_value) + (8.524 * smi_calc))
 
         # --- 顯示報告抬頭 ---
-        st.subheader(f"📊 綜合預測報告：{name}")
+        st.subheader(f"📊 1RM預測報告：{name}")
         st.write(f"**檢測日期：** {test_date}")
         
         # --- 一次輸出三種預測 ---
