@@ -1,0 +1,1 @@
+# strength-prediction-app
