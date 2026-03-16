@@ -8,13 +8,13 @@ st.set_page_config(page_title="1RM 運動科學預測系統", layout="wide")
 # 設定標題與說明
 st.title("🏋️ 1RM 多元迴歸預測與訓練區間報告")
 st.markdown("本系統基於 **IMTP (N)** 與 **SMI (kg/m²)** 之多元線性迴歸模型")
-st.warning("⚠️ **預測適用限制**：本模型建模時，臥推與深蹲皆限制於**肘關節與膝關節 90 度**即向上推起。若低於或超過此角度，預測準確度將受影響。")
+st.warning("⚠️ **預測適用限制**：本模型建模所使用動作之關節角度皆限制於**肘關節或膝關節 90 度**即向上推起。若低於或超過此角度，預測力可能會受影響。")
 st.markdown("---")
 
 # --- 側邊欄：研究背景與設定 ---
 with st.sidebar:
     st.header("⚙️ 系統設定")
-    low_val = st.number_input("中等強度起始值 (N)", value=2300)
+    low_val = st.number_input("中等強度起始值 (N)", value=2000)
     high_val = st.number_input("優秀強度起始值 (N)", value=2800)
     
     st.divider()
@@ -44,7 +44,7 @@ with col_input:
     with c1:
         height_cm = st.number_input("身高 (cm)", min_value=100.0, max_value=250.0, value=170.0)
     with c2:
-        smm_kg = st.number_input("骨骼肌肉量 (kg)", min_value=0.0, value=30.0, help="請輸入骨骼肌重量 (Skeletal Muscle Mass)")
+        smm_kg = st.number_input("骨骼肌肉量 (kg)", min_value=0.0, value=30.0)
     
     # 自動計算 SMI
     height_m = height_cm / 100
@@ -72,11 +72,11 @@ with col_result:
         
         st.divider()
 
-        # --- 綜合訓練強度區間表 (更新肌肥大區間為 6-12RM) ---
-        st.write("### 📋 建議訓練重量參考 (RM)")
+        # --- 綜合訓練強度區間表 (將 RM 建議值設為首欄) ---
+        st.write("### 📋 建議訓練重量參考")
         
         intensity_data = {
-            "訓練目標 (RM)": ["最大肌力 (1RM)", "爆發/力量 (3-5RM)", "肌肥大區間 (6-12RM)", "肌耐力 (15RM+)"],
+            "RM 建議值": ["最大肌力 (1RM)", "爆發/力量 (3-5RM)", "肌肥大區間 (6-12RM)", "肌耐力 (15RM+)"],
             "強度百分比": ["100%", "85-90%", "70-85%", "< 65%"],
             "深蹲 SQ (kg)": [
                 f"{round(pred_sq, 1)}", 
@@ -98,7 +98,12 @@ with col_result:
             ]
         }
         
-        st.table(pd.DataFrame(intensity_data))
+        df_display = pd.DataFrame(intensity_data)
+        
+        # 關鍵修正：將 'RM 建議值' 設為索引，這樣就不會出現 0123
+        df_display = df_display.set_index("RM 建議值")
+        
+        st.dataframe(df_display, use_container_width=True)
 
         # --- IMTP 發力評級 ---
         st.write(f"**IMTP 數據分析 (發力值: {imtp_value} N)**")
@@ -110,6 +115,6 @@ with col_result:
             st.success("Level：Elite")
             
         st.progress(min(1.0, imtp_value / 6000.0))
-        st.caption("註：肌肥大區間 (6-12RM) 是依據運動科學建議之強度範圍。預測值僅限於關節角度 90 度之規範動作。")
+        st.caption("註：肌肥大區間 (6-12RM) 基於 70-85% 1RM 強度計算。預測值僅限於關節角度 90 度之規範動作。")
     else:
         st.info("請在左側輸入 IMTP、身高與骨骼肌肉量，系統將即時生成三項 1RM 預測報告。")
