@@ -14,8 +14,8 @@ st.markdown("---")
 # --- 側邊欄：研究背景與設定 ---
 with st.sidebar:
     st.header("⚙️ 系統設定")
-    low_val = st.number_input("中等強度起始值 (N)", value=2500)
-    high_val = st.number_input("優秀強度起始值 (N)", value=4500)
+    low_val = st.number_input("中等強度起始值 (N)", value=2300)
+    high_val = st.number_input("優秀強度起始值 (N)", value=2800)
     
     st.divider()
     st.header("🎓 學術資訊")
